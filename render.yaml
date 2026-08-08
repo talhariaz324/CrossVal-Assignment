@@ -9,7 +9,7 @@ services:
     runtime: node
     plan: free
     rootDir: backend
-    buildCommand: npm install && npm run build && npm run migrate
+    buildCommand: npm install --include=dev && npm run build && npm run migrate
     startCommand: npm run start
     healthCheckPath: /health
     envVars:
