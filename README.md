@@ -4,6 +4,13 @@ A small B2B order/payment tracker: create orders with line items, record full or
 
 Built as a take-home submission with a deliberate focus on the part of this problem that's actually hard: **making sure two payments recorded at the same instant can never push an order over its total.** Everything else (CRUD, auth, dashboard) is intentionally straightforward.
 
+## Live URLs
+
+- App: https://cross-val-assignment.vercel.app/
+- API: https://orders-and-settlements-api.onrender.com (`GET /health` for a liveness check)
+
+The API runs on a free-tier instance that spins down when idle — the first request after inactivity can take 30–50 seconds to wake up.
+
 ## Stack
 
 - **Backend**: Node.js + TypeScript + Fastify, PostgreSQL via Drizzle ORM, JWT auth (argon2 password hashing), Zod validation.
