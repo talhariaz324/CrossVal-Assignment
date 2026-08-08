@@ -4,11 +4,6 @@ A small B2B order/payment tracker: create orders with line items, record full or
 
 Built as a take-home submission with a deliberate focus on the part of this problem that's actually hard: **making sure two payments recorded at the same instant can never push an order over its total.** Everything else (CRUD, auth, dashboard) is intentionally straightforward.
 
-## Live URLs
-
-- Frontend: `<TODO>`
-- Backend API: `<TODO>` (`GET /health` for a liveness check)
-
 ## Stack
 
 - **Backend**: Node.js + TypeScript + Fastify, PostgreSQL via Drizzle ORM, JWT auth (argon2 password hashing), Zod validation.
@@ -83,14 +78,6 @@ npm run test:unit         # pure domain logic (status derivation, totals, money)
 npm run test:integration  # API + DB, including the concurrency race test
 # or both:
 npm test
-```
-
-The Playwright e2e test drives the real running app, so it **does** need Steps 1–3 already up in their own terminals first:
-
-```bash
-cd frontend
-npx playwright install chromium   # first time only
-npm run e2e
 ```
 
 ## API overview
