@@ -42,7 +42,7 @@ test("signup, create order, partial payment, overpayment rejection, full payment
   });
 
   await test.step("create order: 2 x $500 = $1000, due in 7 days", async () => {
-    await page.getByRole("link", { name: "New order" }).click();
+    await page.getByRole("navigation").getByRole("link", { name: "New order" }).click();
     await page.getByRole("textbox", { name: "Customer name" }).fill("Acme Corp");
     await page.getByRole("textbox", { name: "Description" }).fill("Widget");
     await page.getByRole("spinbutton", { name: "Qty" }).fill("2");
@@ -86,11 +86,12 @@ test("signup, create order, partial payment, overpayment rejection, full payment
     await page.getByRole("link", { name: "Orders & Settlements" }).click();
     await expect(page.getByRole("link", { name: "Acme Corp" })).toBeVisible();
 
-    await page.getByLabel("Filter by status").selectOption("paid");
+    const filter = page.getByRole("group", { name: "Filter by status" });
+    await filter.getByRole("button", { name: "Paid" }).click();
     await expect(page.getByRole("link", { name: "Acme Corp" })).toBeVisible();
 
-    await page.getByLabel("Filter by status").selectOption("pending");
+    await filter.getByRole("button", { name: "Pending" }).click();
     await expect(page.getByRole("link", { name: "Acme Corp" })).toHaveCount(0);
-    await expect(page.getByText("No orders yet.")).toBeVisible();
+    await expect(page.getByText("No orders yet")).toBeVisible();
   });
 });

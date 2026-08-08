@@ -1,9 +1,9 @@
 import type { OrderStatus } from "../api/types";
 
 const OPTIONS: { value: OrderStatus | ""; label: string }[] = [
-  { value: "", label: "All statuses" },
+  { value: "", label: "All" },
   { value: "pending", label: "Pending" },
-  { value: "partially_paid", label: "Partially paid" },
+  { value: "partially_paid", label: "Partial" },
   { value: "paid", label: "Paid" },
   { value: "overdue", label: "Overdue" },
 ];
@@ -16,16 +16,17 @@ export function StatusFilter({
   onChange: (value: OrderStatus | "") => void;
 }) {
   return (
-    <select
-      aria-label="Filter by status"
-      value={value}
-      onChange={(e) => onChange(e.target.value as OrderStatus | "")}
-    >
+    <div className="segmented" role="group" aria-label="Filter by status">
       {OPTIONS.map((opt) => (
-        <option key={opt.value} value={opt.value}>
+        <button
+          key={opt.value}
+          type="button"
+          aria-pressed={value === opt.value}
+          onClick={() => onChange(opt.value)}
+        >
           {opt.label}
-        </option>
+        </button>
       ))}
-    </select>
+    </div>
   );
 }

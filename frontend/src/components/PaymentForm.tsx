@@ -2,10 +2,10 @@ import { useState } from "react";
 import { ApiError } from "../api/client";
 import { useRecordPayment } from "../api/hooks/useRecordPayment";
 import { parseDollarsInput } from "../lib/money";
-
-function todayIso(): string {
-  return new Date().toISOString().slice(0, 10);
-}
+import { todayIso } from "../lib/date";
+import { Card } from "./Card";
+import { Button } from "./Button";
+import { AlertTriangleIcon } from "./icons";
 
 export function PaymentForm({ orderId }: { orderId: string }) {
   const [amount, setAmount] = useState("");
@@ -47,42 +47,49 @@ export function PaymentForm({ orderId }: { orderId: string }) {
   const apiError = recordPayment.error instanceof ApiError ? recordPayment.error : null;
 
   return (
-    <form onSubmit={handleSubmit} className="payment-form">
-      <h3>Record a payment</h3>
-      <div className="form-row">
+    <Card className="payment-form-card">
+      <form onSubmit={handleSubmit} className="payment-form">
+        <h3>Record a payment</h3>
+        <div className="form-row">
+          <label>
+            Amount
+            <span className="money-input">
+              <input
+                type="text"
+                inputMode="decimal"
+                placeholder="0.00"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                required
+              />
+            </span>
+          </label>
+          <label>
+            Date
+            <input type="date" value={paidOn} onChange={(e) => setPaidOn(e.target.value)} required />
+          </label>
+        </div>
         <label>
-          Amount
-          <input
-            type="text"
-            inputMode="decimal"
-            placeholder="0.00"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            required
-          />
+          Note (optional)
+          <input type="text" value={note} onChange={(e) => setNote(e.target.value)} maxLength={1000} />
         </label>
-        <label>
-          Date
-          <input type="date" value={paidOn} onChange={(e) => setPaidOn(e.target.value)} required />
-        </label>
-      </div>
-      <label>
-        Note (optional)
-        <input type="text" value={note} onChange={(e) => setNote(e.target.value)} maxLength={1000} />
-      </label>
 
-      {(formError || apiError) && (
-        <p role="alert" className="form-error" data-testid="payment-error">
-          {formError ?? apiError?.message}
-          {apiError?.code === "OVERPAYMENT" && apiError.details?.maxAllowedCents !== undefined
-            ? ` (max: $${((apiError.details.maxAllowedCents as number) / 100).toFixed(2)})`
-            : ""}
-        </p>
-      )}
+        {(formError || apiError) && (
+          <p role="alert" className="form-error" data-testid="payment-error">
+            <AlertTriangleIcon width={16} height={16} />
+            <span>
+              {formError ?? apiError?.message}
+              {apiError?.code === "OVERPAYMENT" && apiError.details?.maxAllowedCents !== undefined
+                ? ` (max: $${((apiError.details.maxAllowedCents as number) / 100).toFixed(2)})`
+                : ""}
+            </span>
+          </p>
+        )}
 
-      <button type="submit" disabled={recordPayment.isPending}>
-        {recordPayment.isPending ? "Recording…" : "Record payment"}
-      </button>
-    </form>
+        <Button type="submit" loading={recordPayment.isPending} style={{ alignSelf: "flex-start" }}>
+          Record payment
+        </Button>
+      </form>
+    </Card>
   );
 }
